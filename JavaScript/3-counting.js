@@ -14,11 +14,11 @@ class CountingSemaphore {
 
   enter() {
     while (this.counter[0] === 0);
-    this.counter[0] -= 1;
+    this.counter[0]--;
   }
 
   leave() {
-    this.counter[0] += 1;
+    this.counter[0]++;
   }
 }
 
