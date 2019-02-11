@@ -5,7 +5,6 @@ const { Worker, isMainThread } = threads;
 
 if (isMainThread) {
   const buffer = new SharedArrayBuffer(10);
-  const array = new Int8Array(buffer);
   new Worker(__filename, { workerData: buffer });
   new Worker(__filename, { workerData: buffer });
 } else {
