@@ -1,2 +1,1 @@
-# Semaphore
-Binary Semaphore, Counting Semaphore
+# Binary Semaphore, Counting Semaphore
