@@ -3,19 +3,25 @@
 const threads = require('worker_threads');
 const { Worker, isMainThread } = threads;
 
+const LOCKED = 0;
+const UNLOCKED = 1;
+
 class BinarySemaphore {
-  constructor(shared, offset = 0) {
+  constructor(shared, offset = 0, init = false) {
     this.lock = new Int8Array(shared, offset, 1);
+    if (init) this.lock[0] = UNLOCKED;
   }
 
   enter() {
-    while (this.lock[0] !== 0);
-    this.lock[0] = 1;
+    while (this.lock[0] !== UNLOCKED);
+    this.lock[0] = LOCKED;
   }
 
   leave() {
-    if (this.lock[0] === 0) return;
-    this.lock[0] = 0;
+    if (this.lock[0] === UNLOCKED) {
+      throw new Error('Cannot leave unlocked BinarySemaphore');
+    }
+    this.lock[0] = UNLOCKED;
   }
 }
 
@@ -23,7 +29,7 @@ class BinarySemaphore {
 
 if (isMainThread) {
   const buffer = new SharedArrayBuffer(11);
-  const semaphore = new BinarySemaphore(buffer);
+  const semaphore = new BinarySemaphore(buffer, 0, true);
   console.dir({ semaphore });
   new Worker(__filename, { workerData: buffer });
   new Worker(__filename, { workerData: buffer });
