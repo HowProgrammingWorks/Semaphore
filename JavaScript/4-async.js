@@ -6,7 +6,7 @@ const { Worker, isMainThread } = threads;
 
 class CountingSemaphore {
   constructor(shared, offset = 0, initial) {
-    this.counter = new Uint32Array(shared, offset, 1);
+    this.counter = new Int32Array(shared, offset, 1);
     if (typeof initial === 'number') {
       this.counter[0] = initial;
     }
