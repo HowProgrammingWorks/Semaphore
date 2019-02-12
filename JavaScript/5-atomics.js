@@ -8,17 +8,19 @@ class CountingSemaphore {
   constructor(shared, offset = 0, initial) {
     this.counter = new Int32Array(shared, offset, 1);
     if (typeof initial === 'number') {
-      this.counter[0] = initial;
+      Atomics.store(this.counter, 0, initial);
     }
   }
 
-  enter() {
-    while (this.counter[0] === 0);
-    this.counter[0]--;
+  enter(callback) {
+    Atomics.wait(this.counter, 0, 0);
+    Atomics.sub(this.counter, 0, 1);
+    callback();
   }
 
   leave() {
-    this.counter[0]++;
+    Atomics.add(this.counter, 0, 1);
+    Atomics.notify(this.counter, 0, 1);
   }
 }
 
@@ -26,8 +28,7 @@ class CountingSemaphore {
 
 if (isMainThread) {
   const buffer = new SharedArrayBuffer(4);
-  // Try change 10 at next lene to 2 for example
-  const semaphore = new CountingSemaphore(buffer, 0, 10);
+  const semaphore = new CountingSemaphore(buffer, 0, 2);
   console.dir({ semaphore: semaphore.counter[0] });
   for (let i = 0; i < 20; i++) {
     new Worker(__filename, { workerData: buffer });
@@ -39,11 +40,12 @@ if (isMainThread) {
   const REPEAT_COUNT = 1000000;
   const file = `file-${threadId}.dat`;
 
-  semaphore.enter();
-  const data = `Data from ${threadId}`.repeat(REPEAT_COUNT);
-  fs.writeFile(file, data, () => {
-    fs.unlink(file, () => {
-      semaphore.leave();
+  semaphore.enter(() => {
+    const data = `Data from ${threadId}`.repeat(REPEAT_COUNT);
+    fs.writeFile(file, data, () => {
+      fs.unlink(file, () => {
+        semaphore.leave();
+      });
     });
   });
 }
