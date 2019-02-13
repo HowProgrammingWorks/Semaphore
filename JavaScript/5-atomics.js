@@ -15,7 +15,7 @@ class CountingSemaphore {
   enter(callback) {
     Atomics.wait(this.counter, 0, 0);
     Atomics.sub(this.counter, 0, 1);
-    callback();
+    setTimeout(callback, 0);
   }
 
   leave() {

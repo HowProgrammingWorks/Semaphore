@@ -16,7 +16,7 @@ class CountingSemaphore {
   enter(callback) {
     if (this.counter[0] > 0) {
       this.counter[0]--;
-      callback();
+      setTimeout(callback, 0);
     } else {
       this.queue.push(callback);
     }
@@ -27,7 +27,7 @@ class CountingSemaphore {
     if (this.queue.length > 0) {
       const callback = this.queue.shift();
       this.counter[0]--;
-      callback();
+      setTimeout(callback, 0);
     }
   }
 }
