@@ -13,8 +13,7 @@ if (isMainThread) {
   const value = threadId === 1 ? 1 : -1;
   setInterval(() => {
     for (let i = 0; i < 10; i++) {
-      array[i] = value;
-      for (let j = 0; j < 1000000; j++) j;
+      array[i] += value;
     }
     console.dir([ threadId, array ]);
   }, 100);
