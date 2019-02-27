@@ -12,17 +12,10 @@ class CountingSemaphore {
     }
   }
 
-  enter(callback) {
+  enter() {
     Atomics.wait(this.counter, 0, 0);
     const prev = Atomics.sub(this.counter, 0, 1);
-    if (prev > 0) {
-      setTimeout(callback, 0);
-    } else {
-      this.leave();
-      setTimeout(() => {
-        this.enter(callback);
-      }, 0);
-    }
+    if (prev === 0) this.leave();
   }
 
   leave() {
@@ -35,7 +28,8 @@ class CountingSemaphore {
 
 if (isMainThread) {
   const buffer = new SharedArrayBuffer(4);
-  const semaphore = new CountingSemaphore(buffer, 0, 2);
+  // Try to change 10 to 2 at next lene to check solution
+  const semaphore = new CountingSemaphore(buffer, 0, 10);
   console.dir({ semaphore: semaphore.counter[0] });
   for (let i = 0; i < 20; i++) {
     new Worker(__filename, { workerData: buffer });
@@ -47,12 +41,11 @@ if (isMainThread) {
   const file = `file-${threadId}.dat`;
   console.dir({ threadId, semaphore: semaphore.counter[0] });
 
-  semaphore.enter(() => {
-    const data = `Data from ${threadId}`.repeat(REPEAT_COUNT);
-    fs.writeFile(file, data, () => {
-      fs.unlink(file, () => {
-        semaphore.leave();
-      });
+  semaphore.enter();
+  const data = `Data from ${threadId}`.repeat(REPEAT_COUNT);
+  fs.writeFile(file, data, () => {
+    fs.unlink(file, () => {
+      semaphore.leave();
     });
   });
 }
