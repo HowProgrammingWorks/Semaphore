@@ -43,6 +43,7 @@ if (isMainThread) {
   const semaphore = new BinarySemaphore(workerData);
   const array = new Int8Array(workerData, 4);
   const value = threadId === 1 ? 1 : -1;
+
   setInterval(() => {
     semaphore.enter();
     for (let i = 0; i < 10; i++) {
@@ -50,5 +51,5 @@ if (isMainThread) {
     }
     console.dir([ threadId, semaphore.lock[0], array ]);
     semaphore.leave();
-  }, 100);
+  }, 100); // change to 10 to see race condition
 }
