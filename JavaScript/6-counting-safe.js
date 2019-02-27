@@ -13,9 +13,14 @@ class CountingSemaphore {
   }
 
   enter() {
-    Atomics.wait(this.counter, 0, 0);
-    const prev = Atomics.sub(this.counter, 0, 1);
-    if (prev === 0) this.leave();
+    while (true) {
+      Atomics.wait(this.counter, 0, 0);
+      const n = Atomics.load(this.counter, 0, 1);
+      if (n > 0) {
+        const prev = Atomics.compareExchange(this.counter, 0, n, n - 1);
+        if (prev === n) return;
+      }
+    }
   }
 
   leave() {
