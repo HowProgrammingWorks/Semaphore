@@ -16,5 +16,5 @@ if (isMainThread) {
       array[i] += value;
     }
     console.dir([ threadId, array ]);
-  }, 100);
+  }, 100); // change to 10 to see race condition
 }

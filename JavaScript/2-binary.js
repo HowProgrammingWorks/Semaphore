@@ -45,5 +45,5 @@ if (isMainThread) {
     }
     console.dir([ threadId, array ]);
     semaphore.leave();
-  }, 100);
+  }, 100); // change to 10 to see race condition
 }
