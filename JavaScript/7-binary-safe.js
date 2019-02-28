@@ -18,7 +18,6 @@ class BinarySemaphore {
       Atomics.wait(this.lock, 0, LOCKED);
       prev = Atomics.exchange(this.lock, 0, LOCKED);
     }
-    Atomics.store(this.lock, 0, LOCKED);
   }
 
   leave() {
