@@ -1,7 +1,5 @@
 'use strict';
 
-const fs = require('fs');
-
 class CountingSemaphore {
   constructor(concurrency) {
     this.counter = concurrency;
@@ -31,6 +29,8 @@ class CountingSemaphore {
 
 // Usage
 
+const semaphore = new CountingSemaphore(3);
+
 const job = async (task) => {
   console.log('try enter', task);
   await semaphore.enter();
@@ -41,5 +41,4 @@ const job = async (task) => {
   }, 1000);
 };
 
-const semaphore = new CountingSemaphore(3);
 for (let i = 0; i < 100; i++) job(i);
