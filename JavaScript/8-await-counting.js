@@ -9,7 +9,7 @@ class CountingSemaphore {
   }
 
   enter() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       if (this.counter > 0) {
         this.counter--;
         resolve();
@@ -31,7 +31,7 @@ class CountingSemaphore {
 
 // Usage
 
-const job = async task => {
+const job = async (task) => {
   console.log('try enter', task);
   await semaphore.enter();
   console.log('enter', task);

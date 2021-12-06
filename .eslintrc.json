@@ -11,7 +11,8 @@
   "globals": {
     "BigInt": true,
     "SharedArrayBuffer": true,
-    "Atomics": true
+    "Atomics": true,
+    "BigInt": true
   },
   "rules": {
     "indent": [
@@ -215,7 +216,7 @@
     ],
     "arrow-parens": [
       "error",
-      "as-needed"
+      "always"
     ],
     "arrow-body-style": [
       "error",
