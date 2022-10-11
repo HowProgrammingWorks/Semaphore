@@ -1,7 +1,7 @@
 'use strict';
 
-const fs = require('fs');
-const threads = require('worker_threads');
+const fs = require('node:fs');
+const threads = require('node:worker_threads');
 const { Worker, isMainThread } = threads;
 
 class CountingSemaphore {
