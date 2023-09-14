@@ -11,8 +11,7 @@
   "globals": {
     "BigInt": true,
     "SharedArrayBuffer": true,
-    "Atomics": true,
-    "BigInt": true
+    "Atomics": true
   },
   "rules": {
     "indent": [
@@ -266,6 +265,10 @@
     "template-curly-spacing": [
       "error",
       "never"
+    ],
+    "consistent-return": [
+      "error",
+      { "treatUndefinedAsUnspecified": true }
     ]
   }
 }
