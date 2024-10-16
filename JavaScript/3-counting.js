@@ -26,7 +26,7 @@ class CountingSemaphore {
 
 if (isMainThread) {
   const buffer = new SharedArrayBuffer(4);
-  // Try to change 10 to 2 at next lene to see problem
+  // Try to change 10 to 2 at next line to see the problem
   const semaphore = new CountingSemaphore(buffer, 0, 10);
   console.dir({ semaphore: semaphore.counter[0] });
   for (let i = 0; i < 20; i++) {
